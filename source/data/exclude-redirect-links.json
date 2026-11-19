@@ -1,0 +1,66 @@
+[
+  {
+    "origin": "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses.html",
+    "destination": "/testing-aws-aida-alerts-2026/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses.html"
+  },
+  {
+    "origin": "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/gst-hst-rebates/new-housing-rebate.html",
+    "destination": "/testing-aws-aida-alerts-2026/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/gst-hst-rebates/new-housing-rebate.html"
+  },
+  {
+    "origin": "https://www.canada.ca/en/services/taxes/business-registration.html",
+    "destination": "/testing-aws-aida-alerts-2026/en/services/taxes/business-registration.html"
+  },
+  {
+    "origin": "https://www.canada.ca/en/services/taxes/excise-taxes-duties-and-levies/underused-housing-tax.html",
+    "destination": "/testing-aws-aida-alerts-2026/en/services/taxes/excise-taxes-duties-and-levies/underused-housing-tax.html"
+  },
+  {
+    "origin": "https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/rrsps-related-plans/what-home-buyers-plan.html",
+    "destination": "/testing-aws-aida-alerts-2026/en/revenue-agency/services/tax/individuals/topics/rrsps-related-plans/what-home-buyers-plan.html"
+  },
+  {
+    "origin": "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll.html",
+    "destination": "/testing-aws-aida-alerts-2026/en/revenue-agency/services/tax/businesses/topics/payroll.html"
+  },
+  {
+    "origin": "https://www.canada.ca/en/services/benefits/publicpensions/old-age-security/guaranteed-income-supplement.html",
+    "destination": "/testing-aws-aida-alerts-2026/en/services/benefits/publicpensions/old-age-security/guaranteed-income-supplement.html"
+  },
+  {
+    "origin": "https://www.canada.ca/en/revenue-agency/news/cra-multimedia-library/individuals-video-gallery/webinar-be-scam-smart.html",
+    "destination": "/testing-aws-aida-alerts-2026/en/revenue-agency/news/cra-multimedia-library/individuals-video-gallery/webinar-be-scam-smart.html"
+  },
+  {
+    "origin": "https://www.canada.ca/fr/agence-revenu/services/impot/entreprises/sujets/tps-tvh-entreprises.html",
+    "destination": "/testing-aws-aida-alerts-2026/fr/agence-revenu/services/impot/entreprises/sujets/tps-tvh-entreprises.html"
+  },
+  {
+    "origin": "https://www.canada.ca/fr/agence-revenu/services/impot/entreprises/sujets/tps-tvh-entreprises/remboursements-tps-tvh/remboursement-habitations-neuves.html",
+    "destination": "/testing-aws-aida-alerts-2026/fr/agence-revenu/services/impot/entreprises/sujets/tps-tvh-entreprises/remboursements-tps-tvh/remboursement-habitations-neuves.html"
+  },
+  {
+    "origin": "https://www.canada.ca/fr/services/impots/inscription-entreprise.html",
+    "destination": "/testing-aws-aida-alerts-2026/fr/services/impots/inscription-entreprise.html"
+  },
+  {
+    "origin": "https://www.canada.ca/fr/services/impots/taxes-daccise-droits-et-prelevements/taxe-sur-les-logements-sous-utilises.html",
+    "destination": "/testing-aws-aida-alerts-2026/fr/services/impots/taxes-daccise-droits-et-prelevements/taxe-sur-les-logements-sous-utilises.html"
+  },
+  {
+    "origin": "https://www.canada.ca/fr/agence-revenu/services/impot/particuliers/sujets/reer-regimes-connexes/est-regime-accession-a-propriete.html",
+    "destination": "/testing-aws-aida-alerts-2026/fr/agence-revenu/services/impot/particuliers/sujets/reer-regimes-connexes/est-regime-accession-a-propriete.html"
+  },
+  {
+    "origin": "https://www.canada.ca/fr/agence-revenu/services/impot/entreprises/sujets/retenues-paie.html",
+    "destination": "/testing-aws-aida-alerts-2026/fr/agence-revenu/services/impot/entreprises/sujets/retenues-paie.html"
+  },
+  {
+    "origin": "https://www.canada.ca/fr/services/prestations/pensionspubliques/securite-vieillesse/supplement-revenu-garanti.html",
+    "destination": "/testing-aws-aida-alerts-2026/fr/services/prestations/pensionspubliques/securite-vieillesse/supplement-revenu-garanti.html"
+  },
+  {
+    "origin": "https://www.canada.ca/fr/agence-revenu/nouvelles/bibliotheque-multimedia-arc/galerie-videos-particuliers/webinaire-evitez-arnaques.html",
+    "destination": "/testing-aws-aida-alerts-2026/fr/agence-revenu/nouvelles/bibliotheque-multimedia-arc/galerie-videos-particuliers/webinaire-evitez-arnaques.html"
+  }
+]

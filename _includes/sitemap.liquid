@@ -1,0 +1,201 @@
+{% capture crlf %}
+{% endcapture %}
+{%- assign static_files = "" | split: "" -%}
+
+{%- if include.extensions != nil -%}
+  {%- assign strip_ext = include.extensions | strip -%}
+  {%- if strip_ext == "" or strip_ext == "*" or strip_ext == ".*" -%}
+    {%- assign static_files = site.static_files -%}
+  {%- else -%}
+    {%- assign ext_arr = strip_ext | split: "," -%}
+    {%- for item in site.static_files -%}
+      {%- assign item_path_lc = item.path | downcase -%}
+      {%- for extname in ext_arr -%}
+        {%- assign clean_ext = extname | strip | downcase -%}
+        {%- if clean_ext == "" -%}
+          {%- continue -%}
+        {%- endif -%}
+        {%- assign ext_len = clean_ext.size -%}
+        {%- assign ext_start_pos = 0 | minus: ext_len -%}
+        {%- assign current_ext = item_path_lc | slice: ext_start_pos, ext_len -%}
+        {%- if current_ext == clean_ext -%}
+          {%- assign static_files = static_files | push: item -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- assign all_pages = static_files | concat: site.pages -%}
+{%- assign section_list = "" | split: "" -%}
+
+{%- if include.include_path and include.include_path != "" -%}
+  {%- assign raw_sections = include.include_path | split: "," -%}
+  {%- for raw_section in raw_sections -%}
+    {%- assign sec = raw_section | strip -%}
+    {%- if sec == "" -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- assign ch = sec | slice: 0 -%}
+    {%- if ch != "/" -%}
+      {%- assign sec = sec | prepend: "/" -%}
+    {%- endif -%}
+    {%- assign ch = sec | slice: -1 -%}
+    {%- if ch != "/" -%}
+      {%- assign sec = sec | append: "/" -%}
+    {%- endif -%}
+    {%- assign section_list = section_list | push: sec -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- assign exclude_folders = "" | split: "" -%}
+{%- assign exclude_paths = "" | split: "" -%}
+
+{%- if include.exclude_filepath and include.exclude_filepath != "" -%}
+  {%- assign raw_excludes = include.exclude_filepath | split: "," -%}
+  {%- for raw_exclude in raw_excludes -%}
+    {%- assign ex = raw_exclude | strip -%}
+    {%- if ex == "" -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- assign ch = ex | slice: 0 -%}
+    {%- if ch != "/" -%}
+    {%- assign ex = ex | prepend: "/" -%}
+    {%- endif -%}
+    {%- assign ch = ex | slice: -1 -%}
+    {%- if ch == "/" -%}
+      {%- assign exclude_folders = exclude_folders | push: ex -%}
+    {%- else -%}
+      {%- assign exclude_paths = exclude_paths | push: ex -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- assign entries = "" | split: "" -%}
+
+{%- for p in all_pages -%}
+  {%- if p.sitemapExclude == true -%}
+    {%- continue -%}
+  {%- endif -%}
+  {%- assign tree_path = p.url | default: p.path -%}
+  {%- assign ch = tree_path | slice: 0 -%}
+  {%- if ch != "/" -%}
+    {%- assign tree_path = tree_path | prepend: "/" -%}
+  {%- endif -%}
+  {%- assign ch = tree_path | slice: -1 -%}
+  {%- if ch == "/" -%}
+    {%- assign tree_path = tree_path | append: "index.html" -%}
+  {%- endif -%}
+  {%- if section_list.size > 0 -%}
+    {%- assign in_section = false -%}
+    {%- for prefix in section_list -%}
+      {%- assign head = tree_path | slice: 0, prefix.size -%}
+      {%- if head == prefix -%}
+        {%- assign in_section = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- unless in_section -%}
+      {%- continue -%}
+    {%- endunless -%}
+  {%- endif -%}
+  {%- if exclude_paths contains tree_path -%}
+    {%- continue -%}
+  {%- endif -%}
+  {%- assign is_excluded = false -%}
+  {%- for prefix in exclude_folders -%}
+    {%- assign head = tree_path | slice: 0, prefix.size -%}
+    {%- if head == prefix -%}
+      {%- assign is_excluded = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if is_excluded -%}
+    {%- continue -%}
+  {%- endif -%}
+
+  {%- capture entry -%}{{ tree_path }}#{{ forloop.index0 }}{%- endcapture -%}
+
+  {%- assign entries = entries | push: entry -%}
+{%- endfor -%}
+
+{%- assign sorted_entries = entries | sort_natural -%}
+
+{%- if sorted_entries.size > 0 -%}
+  {{ crlf }}<ul id="{{ include.tree_id | default: 'tree1' }}" class="list-unstyled wb-treeview treeview" role="tree"{% if include.tree_label and include.tree_label != "" %} aria-labelledby="{{ include.tree_label }}"{% endif %}>{{ crlf }}
+  {%- assign open_folders = "" | split: "," -%}
+{%- for entry in sorted_entries -%}
+  {%- assign parts = entry | split: "#" -%}
+  {%- assign active_path = parts[0] -%}
+  {%- assign item_index = parts | last | plus: 0 -%}
+  {%- assign p = all_pages[item_index] -%}
+  {%- assign url_parts = active_path | split: "/" -%}
+  {%- assign filename = url_parts | last -%}
+  {%- assign target_folder_depth = url_parts.size | minus: 2 -%}
+  {%- assign this_page_folders = "" | split: "," -%}
+  {%- if target_folder_depth > 0 -%}
+    {%- for i in (1..target_folder_depth) -%}
+      {%- if url_parts[i] != "" and url_parts[i] != nil -%}
+        {%- assign this_page_folders = this_page_folders | push: url_parts[i] -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- assign keep_open_count = 0 -%}
+  {%- assign max_possible_match = open_folders.size -%}
+  {%- if this_page_folders.size < max_possible_match -%}
+    {%- assign max_possible_match = this_page_folders.size -%}
+  {%- endif -%}
+  {%- if max_possible_match > 0 -%}
+    {%- assign loop_end = max_possible_match | minus: 1 -%}
+    {%- for i in (0..loop_end) -%}
+      {%- if open_folders[i] == this_page_folders[i] -%}
+        {%- assign keep_open_count = keep_open_count | plus: 1 -%}
+      {%- else -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- assign levels_to_close = open_folders.size | minus: keep_open_count -%}
+  {%- if levels_to_close > 0 -%}
+    {%- for c in (1..levels_to_close) -%}
+    </ul>{{ crlf }}
+  </li>{{ crlf }}
+    {%- endfor -%}
+    {%- assign temp_folders = "" | split: "," -%}
+    {%- if keep_open_count > 0 -%}
+      {%- assign loop_end = keep_open_count | minus: 1 -%}
+      {%- for i in (0..loop_end) -%}
+        {%- assign temp_folders = temp_folders | push: open_folders[i] -%}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- assign open_folders = temp_folders -%}
+  {%- endif -%}
+  {%- assign start_index = open_folders.size -%}
+  {%- assign end_index = this_page_folders.size -%}
+  {%- if start_index < end_index -%}
+    {%- assign loop_end = end_index | minus: 1 -%}
+    {%- for i in (start_index..loop_end) -%}
+      {%- assign folder_name = this_page_folders[i] -%}
+      {%- assign open_folders = open_folders | push: folder_name -%}
+  <li role="treeitem" aria-expanded="true" aria-selected="false" class="tv-parent" aria-level="{{ open_folders.size }}">
+    <span class="tv-title">{{ folder_name }}</span>
+    <ul role="group">{{ crlf }}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- assign display_label = filename -%}
+  {%- assign leaf_level = open_folders.size | plus: 1 -%}
+  {%- if p.url -%}
+      <li role="treeitem" aria-selected="false" aria-level="{{ leaf_level }}" data-action-id="noaction" class="nowrap tv-list node-circle node-outline-none"><span class="tv-filtered"><a tabindex="-1" target="_blank" class="tv-page-link" data-exit="false" href="{{ p.url | relative_url }}"{% if p.tooltip %} data-content-tooltip="{{ p.title | escape_once }}"{% endif %}><span class="tv-page-url">{{ display_label | escape }}</span>{%- if p.title -%}<small class="tv-page-title small text-muted" lang="{{ p.language | default: p.lang | default: page.language | default: page.lang | default: 'en' }}">  {{ p.title | escape_once }}</small>{%- endif -%}</a></span></li>{{ crlf }}
+  {%- else -%}
+      <li role="treeitem" aria-selected="false" aria-level="{{ leaf_level }}" data-action-id="static-noaction" class="nowrap tv-list node-circle node-outline-solid">{%- if include.show_label != false -%}<span class="label label-default position-relative tv-type">static</span>{%- endif -%}<span class="tv-filtered"><a tabindex="-1" target="_blank" class="tv-page-link" data-exit="false" href="{{ p.path | relative_url }}"><span class="tv-page-url">{{ display_label | escape }}</span></a></span></li>{{ crlf }}
+  {%- endif -%}
+{%- endfor -%}
+{%- if open_folders.size > 0 -%}
+  {%- for i in (1..open_folders.size) -%}
+    </ul>{{ crlf }}
+  </li>{{ crlf }}
+  {%- endfor -%}
+{%- endif -%}
+</ul>{{ crlf }}
+{%- endif -%}
